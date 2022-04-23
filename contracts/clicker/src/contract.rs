@@ -4,7 +4,7 @@ use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response,
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
-use crate::msg::{CountResponse, InstantiateMsg, QueryMsg};
+use crate::msg::{GoldenRResponse, InstantiateMsg, QueryMsg};
 use crate::state::{State, STATE};
 
 const CONTRACT_NAME: &str = "crates.io:clicker";
@@ -19,7 +19,7 @@ pub fn instantiate(
 ) -> Result<Response, ContractError> {
     
     let state = State {
-        count: msg.count,
+        goldenr: msg.goldenr,
         owner: info.sender.clone(),
     };
 
@@ -29,7 +29,7 @@ pub fn instantiate(
     Ok(Response::new()
         .add_attribute("method", "instantiate")
         .add_attribute("owner", info.sender)
-        .add_attribute("count", msg.count.to_string())    
+        .add_attribute("golden ratio", msg.goldenr.to_string())    
     )
 }
 
@@ -40,12 +40,12 @@ pub fn query(
     msg: QueryMsg
 ) -> StdResult<Binary> {
     match msg {
-        QueryMsg::GetCount {} => to_binary(&query_count(deps)?),
+        QueryMsg::GetGoldenR {} => to_binary(&query_goldenr(deps)?),
     }
 }
 
-fn query_count(deps: Deps) -> StdResult<CountResponse> {
+fn query_goldenr(deps: Deps) -> StdResult<GoldenRResponse> {
     let state = STATE.load(deps.storage)?;
-    Ok(CountResponse { count: state.count })
+    Ok(GoldenRResponse { goldenr: state.goldenr })
 
 }
